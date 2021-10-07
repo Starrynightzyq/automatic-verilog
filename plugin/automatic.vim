@@ -2,7 +2,7 @@
 " Vim Plugin for Verilog Code Automactic Generation 
 " Author:         HonkW
 " Website:        https://honk.wang
-" Last Modified:  2021/09/29 22:10
+" Last Modified:  2021/10/07 16:10
 " Note:           1. Auto function based on zhangguo's vimscript, heavily modified
 "                 2. Rtl Tree based on zhangguo's vimscript, slightly modified
 "                    https://www.vim.org/scripts/script.php?script_id=4067 
@@ -83,12 +83,12 @@ let s:wave_max_wd = s:sig_offset + s:clk_num*s:clk_period       "maximum width
 "}}}2
 
 "Header 定义头文件{{{2
-let s:author = get(g:,'atv_author','HonkW')
+let s:author = get(g:,'atv_author','zhouyuqian')
 let s:company = get(g:,'atv_company','')
 let s:project = get(g:,'atv_prject','IC_Design')
-let s:device = get(g:,'atv_device','Xilinx')
-let s:email = get(g:,'atv_email','contact@honk.wang')
-let s:website = get(g:,'atv_website','https://honk.wang')
+let s:device = get(g:,'atv_device','ASIC')
+let s:email = get(g:,'atv_email','starrynightzyq@gmail.com')
+let s:website = get(g:,'atv_website','https://zhouyuqian.com')
 "}}}2
 
 " Verilog Type 定义Verilog变量类型{{{2
