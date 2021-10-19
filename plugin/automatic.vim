@@ -2,7 +2,7 @@
 " Vim Plugin for Verilog Code Automactic Generation 
 " Author:         HonkW
 " Website:        https://honk.wang
-" Last Modified:  2021/10/07 16:10
+" Last Modified:  2021/10/13 17:08
 " Note:           1. Auto function based on zhangguo's vimscript, heavily modified
 "                 2. Rtl Tree based on zhangguo's vimscript, slightly modified
 "                    https://www.vim.org/scripts/script.php?script_id=4067 
@@ -602,6 +602,7 @@ endfunction "}}}4
 "AutoTemplate 快速新建.v文件{{{2
 
 autocmd BufNewFile *.v call AutoTemplate()
+autocmd BufNewFile *.sv call AutoTemplate()
 
 function AutoTemplate() "{{{3
     let filename = expand("%")
@@ -680,18 +681,16 @@ endfunction "}}}3
 
 function AlBpp() "{{{3
     let lnum = line(".")
-    for idx in range(1,8)
+    for idx in range(1,6)
         call append(lnum,"")
     endfor
-    call setline(lnum+1,"    always@(posedge clk or posedge rst)")
-    call setline(lnum+2,"    begin")
-    call setline(lnum+3,"        if(rst)begin")
-    call setline(lnum+4,"             ")
-    call setline(lnum+5,"        end")
-    call setline(lnum+6,"        else begin")
-    call setline(lnum+7,"             ")
-    call setline(lnum+8,"        end")
-    call setline(lnum+9,"    end")
+    call setline(lnum+1,"    always@(posedge clk or posedge rst) begin")
+    call setline(lnum+2,"        if(rst)begin")
+    call setline(lnum+3,"             ")
+    call setline(lnum+4,"        end else begin")
+    call setline(lnum+5,"             ")
+    call setline(lnum+6,"        end")
+    call setline(lnum+7,"    end")
     call cursor(lnum+4,13)
 endfunction "}}}3
 
