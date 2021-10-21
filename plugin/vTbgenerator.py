@@ -27,6 +27,9 @@ Usage:
 import re
 import sys
 import chardet
+import vim
+import os
+import sys
 
 def delComment( Text ):
     """ removed comment """
@@ -145,29 +148,7 @@ def formatPara(ParaList) :
     paraDec = preDec + paraDec
     return paraDec,paraDef
 
-def getName(input_file):
-    """ write testbench to file """
-    with open(input_file, 'rb') as f:
-        f_info =  chardet.detect(f.read())
-        f_encoding = f_info['encoding']
-    with open(input_file, encoding=f_encoding) as inFile:
-        inText  = inFile.read()
-
-    # removed comment,task,function
-    inText = delComment(inText)
-    inText = delBlock  (inText)
-
-    # moduel ... endmodule  #
-    moPos_begin = re.search(r'(\b|^)module\b', inText ).end()
-    moPos_end   = re.search(r'\bendmodule\b', inText ).start()
-    inText = inText[moPos_begin:moPos_end]
-
-    name  = findName(inText)
-    tb_name = "tb"+name
-
-    return tb_name
-
-def writeTestBench(input_file):
+def getSome(input_file):
     """ write testbench to file """
     with open(input_file, 'rb') as f:
         f_info =  chardet.detect(f.read())
@@ -198,6 +179,9 @@ def writeTestBench(input_file):
     output = formatDeclare(output ,'wire')
     inout  = formatDeclare(inout ,'wire')
 
+    return name, paraDec, paraDef, portList, input, output, inout
+
+def writeTestBench(name, paraDec, paraDef, portList, input, output, inout):
     # write testbench
     timescale = '`timescale  1ns / 1ps\n'
     print("//~ `New testbench")
@@ -242,5 +226,26 @@ end
     print(operation)
     print("endmodule")
 
+def newTestBench():
+    pre_b = vim.current.buffer
+    pre_w = vim.current.window
+    name, paraDec, paraDef, portList, input, output, inout = getSome(pre_b.name)
+    suffix = os.path.splitext(pre_b.name)[-1]
+    tb_name = 'tb_'+name+suffix
+    if not os.path.exists(tb_name):
+        savedStdout = sys.stdout  #保存标准输出流
+        with open(tb_name, 'w+') as file:
+            sys.stdout = file  #标准输出重定向至文件
+            writeTestBench(name, paraDec, paraDef, portList, input, output, inout)
+        sys.stdout = savedStdout  #恢复标准输出流
+        vim.command(':vsp '+tb_name)
+    else:
+        vim.command(':vsp '+tb_name)
+        print(tb_name+' exists!')
+
+def newTestBench_novim(filename):
+    name, paraDec, paraDef, portList, input, output, inout = getSome(filename)
+    writeTestBench(name, paraDec, paraDef, portList, input, output, inout)
+
 if __name__ == '__main__':
-    writeTestBench(sys.argv[1])
+    newTestBench_novim(sys.argv[1])

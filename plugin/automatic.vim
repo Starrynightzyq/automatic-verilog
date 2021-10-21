@@ -2,7 +2,7 @@
 " Vim Plugin for Verilog Code Automactic Generation 
 " Author:         HonkW
 " Website:        https://honk.wang
-" Last Modified:  2021/10/21 12:03
+" Last Modified:  2021/10/21 14:27
 " Note:           1. Auto function based on zhangguo's vimscript, heavily modified
 "                 2. Rtl Tree based on zhangguo's vimscript, slightly modified
 "                    https://www.vim.org/scripts/script.php?script_id=4067 
@@ -7095,6 +7095,21 @@ let &cpo=s:cpo
 unlet s:cpo
 "}}}1
 
+if has('python3')
+python3 import sys
+python3 import vim
+
+python3 sys.path.append(vim.eval('expand("<sfile>:h")'))
+
+function! GenTb()
+python3 << EOF
+from vTbgenerator import newTestBench
+newTestBench()
+EOF
+cal AddHeader()
+endfunction
+endif
+
 if has('python')
 python import sys
 python import vim
@@ -7103,14 +7118,10 @@ python sys.path.append(vim.eval('expand("<sfile>:h")'))
 
 function! GenTb()
 python << EOF
-import vim
-from vTbgenerator import writeTestBench
-from vTbgenerator import getName
-tb_name = getName(vim.current.buffer)
-filetype = vim.eval('&filetype')
-vim.command(':vsp '+tb_name+'.'+filetype)
-writeTestBench(vim.current.buffer)
+from vTbgenerator import newTestBench
+newTestBench()
 EOF
+cal AddHeader()
 endfunction
 endif
 
