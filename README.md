@@ -127,6 +127,9 @@ Plugin 'HonkW93/automatic-verilog'
 
 [Vimcript-AutoMatic | HonkW](https://blog.honk.wang/posts/AutoMatic/)
 
+|命令|注释|
+|----|----|
+|:Tb|生成 TestBench|
 
 ## 5. 更新
 
