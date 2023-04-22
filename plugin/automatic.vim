@@ -2,7 +2,7 @@
 " Vim Plugin for Verilog Code Automactic Generation 
 " Author:         HonkW
 " Website:        https://honk.wang
-" Last Modified:  2021/10/21 14:27
+" Last Modified:  2021/10/29 15:11
 " Note:           1. Auto function based on zhangguo's vimscript, heavily modified
 "                 2. Rtl Tree based on zhangguo's vimscript, slightly modified
 "                    https://www.vim.org/scripts/script.php?script_id=4067 
@@ -207,7 +207,7 @@ amenu &Verilog.Wave.Invert<TAB><C-F8>                                   :call In
 
 "Code Snippet 代码段{{{3
 amenu &Verilog.Code.Always@.always\ @(posedge\ or\ posedge)<TAB><;al>   :call AlBpp()<CR>
-amenu &Verilog.Code.Always@.always\ @(posedge\ or\ negedge)             :call AlBpn()<CR>
+amenu &Verilog.Code.Always@.always\ @(posedge\ or\ negedge)<TAB><;an>   :call AlBpn()<CR>
 amenu &Verilog.Code.Always@.always\ @(*)                                :call AlB()<CR>
 amenu &Verilog.Code.Always@.always\ @(negedge\ or\ negedge)             :call AlBnn()<CR>
 amenu &Verilog.Code.Always@.always\ @(posedge)                          :call AlBp()<CR>
@@ -248,7 +248,9 @@ map <C-F8>      :call Invert()<ESC>
 
 "Auto 自动化 {{{3
 map <S-F3>      :call AutoInst(0)<ESC>
+map ;ai         :call AutoInst(0)<ESC>
 map <S-F4>      :call AutoPara(0)<ESC>
+map ;ap         :call AutoPara(0)<ESC>
 map <S-F5>      :call AutoParaValue(0)<ESC>
 map <S-F6>      :call AutoReg()<ESC>
 map <S-F7>      :call AutoWire()<ESC>
@@ -258,6 +260,7 @@ map <S-F8>      :call AutoDef()<ESC>
 "Code Snippet 代码段{{{3
 "Add Always 添加always块
 map ;al         :call AlBpp()<CR>i
+map ;an         :call AlBpn()<CR>i
 "Add Header 添加文件头
 map ;hd         :call AddHeader()<CR> 
 "Add Comment 添加注释
@@ -681,7 +684,7 @@ endfunction "}}}3
 
 function AlBpp() "{{{3
     let lnum = line(".")
-    for idx in range(1,6)
+    for idx in range(1,7)
         call append(lnum,"")
     endfor
     call setline(lnum+1,"    always@(posedge clk or posedge rst) begin")
@@ -696,22 +699,17 @@ endfunction "}}}3
 
 function AlBpn() "{{{3
     let lnum = line(".")
-    for idx in range(1,11)
+    for idx in range(1,7)
         call append(lnum,"")
     endfor
-    call setline(lnum+1 ,"    always@(posedge clk or negedge rst_n)")
-    call setline(lnum+2 ,"    begin")
-    call setline(lnum+3 ,"        if(!rst_n)begin")
-    call setline(lnum+4 ,"            ")
-    call setline(lnum+5 ,"        end ")
-    call setline(lnum+6 ,"        else if()begin")
-    call setline(lnum+7 ,"            ")
-    call setline(lnum+8 ,"        end") 
-    call setline(lnum+9 ,"        else begin")
-    call setline(lnum+10,"            ")
-    call setline(lnum+11,"        end")
-    call setline(lnum+12,"    end")
-    call cursor(lnum+3,13)
+    call setline(lnum+1 ,"    always@(posedge clk or negedge nrst) begin")
+    call setline(lnum+2 ,"        if(!nrst)begin")
+    call setline(lnum+3 ,"            ")
+    call setline(lnum+4 ,"        end else begin")
+    call setline(lnum+5 ,"            ")
+    call setline(lnum+6 ,"        end")
+    call setline(lnum+7 ,"    end")
+    call cursor(lnum+4,13)
 endfunction "}}}3
 
 function AlB() "{{{3
